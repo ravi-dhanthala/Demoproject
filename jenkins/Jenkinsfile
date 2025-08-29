@@ -23,18 +23,18 @@ pipeline{
         }
     }
     post {
-        always {
-            emailext (
-                to: 'ravikumardhanthala6869@gmail.com',
-                subject: "Build Result: ${currentBuild.currentResult} - Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
-                body: """\
-                    <p>Build completed with status: <b>${currentBuild.currentResult}</b></p>
-                    <p><b>Job:</b> ${env.JOB_NAME}</p>
-                    <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
-                    <p><b>URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                """,
-                mimeType: 'text/html'
-            )
-        }
+    always {
+        emailext(
+            to: 'ravikumardhanthala6869@gmail.com',
+            subject: "Build ${currentBuild.currentResult}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """
+                Build Status: ${currentBuild.currentResult}
+                Job: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+                URL: ${env.BUILD_URL}
+            """
+        )
     }
+}
+
 }
