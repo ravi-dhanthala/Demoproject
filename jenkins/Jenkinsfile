@@ -16,6 +16,11 @@ pipeline{
                 bat 'mvn test'
             }
         }
+        stage('Publishing artifacts'){
+            steps{
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.jar', followSymlinks: false, onlyIfSuccessful: true
+            }
+        }
         stage('deploying'){
             steps{
                 echo 'deplying code'
