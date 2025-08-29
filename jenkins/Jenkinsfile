@@ -1,28 +1,40 @@
-pipeline {
+pipeline{
     agent any
-    options {
-        skipStagesAfterUnstable()
+    stages{
+        stage('cloning'){
+            steps{
+                git branch: 'feature/2025.06.22', credentialsId: 'github_credentials', url: 'https://github.com/ravi-dhanthala/Demoproject.git'
+            }
+        }
+        stage('building'){
+            steps{
+                bat 'mvn clean install'
+            }
+        }
+        stage('testing'){
+            steps{
+                bat 'mvn test'
+            }
+        }
+        stage('deploying'){
+            steps{
+                echo 'deplying code'
+            }
+        }
     }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                sh './jenkins/scripts/deliver.sh' 
-            }
+    post {
+        always {
+            emailext (
+                to: 'ravikumardhanthala6869@gmail.com',
+                subject: "Build Result: ${currentBuild.currentResult} - Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]'",
+                body: """\
+                    <p>Build completed with status: <b>${currentBuild.currentResult}</b></p>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                    <p><b>URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                """,
+                mimeType: 'text/html'
+            )
         }
     }
 }
