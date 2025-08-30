@@ -3,7 +3,9 @@ pipeline{
     stages{
         stage('cloning'){
             steps{
-                git branch: 'feature/2025.06.22', credentialsId: 'github_credentials', url: 'https://github.com/ravi-dhanthala/Demoproject.git'
+                git branch: 'feature/2025.06.22',
+                credentialsId: 'github_credentials',
+                url: 'https://github.com/ravi-dhanthala/Demoproject.git'
             }
         }
         stage('building'){
@@ -18,12 +20,17 @@ pipeline{
         }
         stage('Publishing artifacts'){
             steps{
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.jar', followSymlinks: false, onlyIfSuccessful: true
+                archiveArtifacts allowEmptyArchive: true,
+                artifacts: 'target/*.jar',
+                followSymlinks: false,
+                onlyIfSuccessful: true
             }
         }
         stage('deploying'){
             steps{
-                echo 'deplying code'
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat', path: '', url: 'http://localhost:8080')],
+                contextPath: 'Demoproject',
+                war: 'target/*.jar'
             }
         }
     }
