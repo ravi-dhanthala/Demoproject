@@ -21,18 +21,18 @@ pipeline{
         stage('Publishing artifacts'){
             steps{
                 archiveArtifacts allowEmptyArchive: true,
-                artifacts: 'target/*.jar',
+                artifacts: '**/*.jar',
                 followSymlinks: false,
                 onlyIfSuccessful: true
             }
         }
-        stage('deploying'){
+        /*stage('deploying'){
             steps{
                 deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat', path: '', url: 'http://localhost:8080')],
                 contextPath: 'Demoproject',
                 war: 'target/*.jar'
             }
-        }
+        }*/
     }
     post {
     always {
