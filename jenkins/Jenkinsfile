@@ -10,12 +10,12 @@ pipeline{
         }
         stage('building'){
             steps{
-                bat 'mvn clean install'
+                sh 'mvn clean install'
             }
         }
         stage('testing'){
             steps{
-                bat 'mvn test'
+                sh 'mvn test'
             }
         }
         stage('Publishing artifacts'){
